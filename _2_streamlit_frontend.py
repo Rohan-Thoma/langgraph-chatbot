@@ -1,5 +1,5 @@
 import streamlit as st
-from langgraph_backend import chatbot
+from _1_langgraph_backend import chatbot
 from langchain_core.messages import HumanMessage
 
 #User message history should be in the session state as long as the browser session is active
@@ -24,18 +24,10 @@ if user_input:
     with st.chat_message('user'):
         st.text(user_input)
 
-    #Now get the replies from the ai chatbot via streaming also we need to show the streaming in frontend also.
-    with st.chat_message('assistant'):
-        #Now this streamlit stream function requires a generator object, which we will get from langraph
-        #Instead of invoke(), we need to call stream() function of the graph object
-        ai_message = st.write_stream(
-            message_chunk.content for message_chunk,metadata in chatbot.stream(
-                {'messages': [HumanMessage(content=user_input)]},
-                config= config,
-                stream_mode= 'messages'
-            )
-        )
-    
+    #Now get the replies from the ai chatbot 
+    response = chatbot.invoke({'messages': [HumanMessage(content= user_input)]}, config=config)
+    ai_message = response['messages'][-1].content
     #Now add the assitant message also to the message history
     st.session_state['message_history'].append({'role': 'assistant', 'content': ai_message})
-    
+    with st.chat_message('assistant'):
+        st.text(ai_message)
