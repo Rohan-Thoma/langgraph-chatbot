@@ -72,7 +72,14 @@ for message in st.session_state['message_history']:
         st.text(message['content'])
 
 #Since we are also maintaining history in the backend, we need to create a config and pass it
-config = {'configurable':{'thread_id': st.session_state['thread_id']}}
+# config = {'configurable':{'thread_id': st.session_state['thread_id']}}
+
+#This metadata insertion is additional thing for naming the threads creates in the chatbot to be able to recognized in langsmith tracking
+config = {'configurable':{'thread_id': st.session_state['thread_id']},
+          'meta_data':{
+              "thread_id": st.session_state['thread_id']
+          },
+          'run_name': 'chat_turn'}
 
 user_input = st.chat_input('Type here')
 
