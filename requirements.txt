@@ -4,3 +4,4 @@ langchain-openai
 dotenv
 streamlit
 langgraph-checkpoint-sqlite
+langchain-mcp-adapters
